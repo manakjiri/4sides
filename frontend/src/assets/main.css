@@ -1,0 +1,51 @@
+@import './base.css';
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: underline;
+  color: var(--color-text);
+  /* transition: 0.4s; */
+  /* padding: 3px; */
+}
+
+/* @media (hover: hover) {
+  a:hover {
+    background-color: var(--vt-c-text-dark-2);
+  }
+} */
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;
+  }
+
+  #app {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 2rem;
+  }
+}
+
+.factual {
+  background-color: var(--color-factual);
+}
+
+.revealing {
+  background-color: var(--color-revealing);
+}
+
+.relationship {
+  background-color: var(--color-relationship);
+}
+
+.appeal {
+  background-color: var(--color-appeal);
+}
