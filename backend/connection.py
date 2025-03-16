@@ -35,9 +35,10 @@ class ConnectionManager:
         self.ollama_client = ollama_client
         self._client_counter = 0
         self._message_queue: Queue[InterpretationRequest] = Queue()
-        self._chat_worker_task = Task(self._chat_worker())
+        self._chat_worker_task: Task | None = None
 
     async def _chat_worker(self):
+        print("Chat worker started")
         while True:
             request = await self._message_queue.get()
             try:
@@ -100,6 +101,9 @@ class ConnectionManager:
             await connection.websocket.send_text(message)
 
     async def process_message(self, client_id: int, message: str):
+        if not self._chat_worker_task or self._chat_worker_task.done():
+            self._chat_worker_task = Task(self._chat_worker())
+
         user = self.active_connections[client_id]
         user.current_message = message
         await self._check_user_message_progress(user)
