@@ -8,7 +8,7 @@ app = FastAPI()
 api = FastAPI()
 
 client = AsyncClient(
-    host="http://gpu.lan:11434",
+    host="http://10.0.0.136:11434",
 )
 
 manager = ConnectionManager(client)
@@ -17,6 +17,7 @@ manager = ConnectionManager(client)
 @api.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     client_id = await manager.connect(websocket)
+    print(f"Client {client_id} connected")
     try:
         while True:
             data = await websocket.receive_text()
@@ -26,7 +27,10 @@ async def websocket_endpoint(websocket: WebSocket):
 
     except WebSocketDisconnect:
         manager.disconnect(client_id)
+        print(f"Client {client_id} disconnected")
 
+    except Exception as e:
+        print(f"Client {client_id} error: {e}")
 
 app.mount("/api", api)
 app.mount("/", StaticFiles(directory="static", html=True), name="static")

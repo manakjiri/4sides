@@ -1,5 +1,7 @@
 services:
   4sides:
     build: .
-    ports:
-      - "8000:8000"
+    #ports:
+    #- "8002:8000"
+    restart: unless-stopped
+    network_mode: host

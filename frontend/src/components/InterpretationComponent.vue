@@ -24,8 +24,7 @@ const values = ref<{ [id: string]: UserInputInterpretation | null }>({
   [InterpretationLevel.APPEAL]: null,
 })
 
-//const url = `ws://${window.location.hostname}:${window.location.port}/ws`
-const url = 'ws://localhost:8000/api/ws'
+const url = 'wss://sides.manakjiri.cz/api/ws'
 const ws = ref<WebSocket | null>(null)
 
 function connect() {
@@ -51,7 +50,9 @@ function connect() {
 
   ws.value.onmessage = (event) => {
     const intr: UserInputInterpretation = JSON.parse(event.data)
-    values.value[intr.level] = intr
+    if (!!actual_message.value) {
+      values.value[intr.level] = intr
+    }
   }
 }
 
@@ -77,7 +78,7 @@ watch(message, (new_message) => {
 
 const isLoading = computed(() => {
   return (level: InterpretationLevel) => {
-    if (!actual_message.value.trim()) {
+    if (!actual_message.value) {
       return false
     }
     return values.value[level]?.message !== actual_message.value
@@ -95,6 +96,7 @@ function capitalizeFirstLetter(val: string): string {
     placeholder="Start typing a message you want interpreted"
     v-model="message"
     class="wide-input"
+    @input="message = message.slice(0, MAX_MESSAGE_LENGTH)"
   />
   <section class="interpretations-section">
     <div
