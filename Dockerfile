@@ -18,6 +18,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY --from=vue-build /vue-app/dist static
 COPY backend .
 
-CMD [ "python", "-u", "-m", "fastapi", "run" ]
-
-#CMD [ "tail", "-f", "/dev/null" ]
+CMD [ "python", "-u", "-m", "fastapi", "run", "--port", "8002" ]
